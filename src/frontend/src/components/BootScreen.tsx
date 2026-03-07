@@ -6,9 +6,13 @@ interface BootScreenProps {
 }
 
 const BOOT_MESSAGES = [
-  { text: "BIOS v4.2.1 -- ITCLUB SYSTEMS", delay: 0, color: "amber" },
   {
-    text: "Copyright (C) 2024-2026 ITCLUB. All rights reserved.",
+    text: "BIOS v4.2.1 -- ITCLUB SYSTEMS @ BVB KDLR",
+    delay: 0,
+    color: "amber",
+  },
+  {
+    text: "Copyright (C) 2025-2026 ITCLUB BVB KDLR. All rights reserved.",
     delay: 300,
     color: "dim",
   },
@@ -20,7 +24,7 @@ const BOOT_MESSAGES = [
   },
   { text: "Checking Memory... 1337 MB OK", delay: 900, color: "normal" },
   {
-    text: "Checking Storage... /dev/club/projects: 4 items",
+    text: "Checking Storage... /dev/club/projects: 5 items | /dev/club/members: 50+",
     delay: 1100,
     color: "normal",
   },
@@ -50,24 +54,28 @@ const BOOT_MESSAGES = [
   { text: "", delay: 2900, color: "dim" },
   { text: "Mounting filesystem... OK", delay: 3000, color: "normal" },
   {
-    text: "Loading kernel modules: creativity.ko, teamwork.ko, code.ko",
+    text: "Loading kernel modules: creativity.ko, teamwork.ko, pragati.ko",
     delay: 3200,
     color: "normal",
   },
   {
-    text: "Starting services: nginx, postgres, dream-engine...",
+    text: "Starting services: root@suchithra, admin@vinayak, devlead@niranjan...",
     delay: 3400,
     color: "normal",
   },
   { text: "", delay: 3600, color: "dim" },
-  { text: "** ITCLUB YEAR 2 INITIALIZED **", delay: 3700, color: "bright" },
+  {
+    text: "** ITCLUB @ BVB KDLR -- YEAR 2 INITIALIZED **",
+    delay: 3700,
+    color: "bright",
+  },
   {
     text: "** UPGRADE FROM v1.0 -> v2.0 COMPLETE **",
     delay: 3900,
     color: "bright",
   },
   { text: "", delay: 4100, color: "dim" },
-  { text: "Welcome to ITCLUB_OS v2.0", delay: 4200, color: "amber" },
+  { text: "Welcome to ITCLUB_OS v2.0 | BVB KDLR", delay: 4200, color: "amber" },
   { text: "Type 'help' for available commands.", delay: 4400, color: "amber" },
 ];
 

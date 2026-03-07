@@ -4,30 +4,41 @@ import { useGetAllProjects } from "../../hooks/useQueries";
 const SAMPLE_PROJECTS: Project[] = [
   {
     id: BigInt(1),
-    name: "ClubWebsite_v1.0",
+    name: "Suttradhara_MiniTechFest",
     description:
-      "Official school IT club website — the beginning of everything.",
-    year: BigInt(2024),
+      "ITCLUB's debut mini tech fest at BVB KDLR. Exhibits, demos, and student-led workshops showcasing tech to the school.",
+    year: BigInt(2025),
     status: "200",
   },
   {
     id: BigInt(2),
-    name: "EventTracker",
-    description: "Full-stack event management system for club activities.",
-    year: BigInt(2024),
+    name: "Robotics_Workshop",
+    description:
+      "Two-day hands-on robotics workshop for students. Covered hardware assembly, basic programming, and bot demonstrations.",
+    year: BigInt(2025),
     status: "200",
   },
   {
     id: BigInt(3),
-    name: "HackathonPortal",
-    description: "Coding competition platform with real-time leaderboards.",
-    year: BigInt(2024),
-    status: "201",
+    name: "Pragati_Techfest",
+    description:
+      "Full-scale annual tech fest. Competitions, technical events, and showcases across disciplines.",
+    year: BigInt(2025),
+    status: "200",
   },
   {
     id: BigInt(4),
-    name: "NoticeBoard_App",
-    description: "Digital notice board replacing physical bulletin boards.",
+    name: "AnnualDay_Presentation",
+    description:
+      "Designed and delivered the background presentation for school Annual Day ceremony.",
+    year: BigInt(2025),
+    status: "200",
+  },
+  {
+    id: BigInt(5),
+    name: "Scoreboard_System",
+    description:
+      "Live scoreboard support for Cultural Fest, Sports Fest, and inter-school Math Quiz. Real-time score display and management.",
     year: BigInt(2025),
     status: "200",
   },
@@ -178,14 +189,12 @@ export default function ProjectsSection() {
             <span className="phosphor-bright">100%</span>
           </div>
           <div>
-            <span className="phosphor-dim">Technologies: </span>
-            <span className="phosphor-text">
-              React, TypeScript, Node.js, Python, SQL
-            </span>
+            <span className="phosphor-dim">School: </span>
+            <span className="phosphor-text">BVB KDLR</span>
           </div>
           <div>
-            <span className="phosphor-dim">Lines of code: </span>
-            <span className="amber-text">~42,000</span>
+            <span className="phosphor-dim">Year: </span>
+            <span className="amber-text">2025 (Year 1)</span>
           </div>
         </div>
       </div>

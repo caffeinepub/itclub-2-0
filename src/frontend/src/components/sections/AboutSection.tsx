@@ -4,43 +4,43 @@ import { useGetAllMembers } from "../../hooks/useQueries";
 const SAMPLE_MEMBERS: Member[] = [
   {
     id: BigInt(1),
-    name: "Aryan Sharma",
-    role: "President",
+    name: "Suchithra Teacher",
+    role: "Root / Faculty Advisor",
     accessLevel: BigInt(0),
-    joinYear: BigInt(2024),
+    joinYear: BigInt(2025),
   },
   {
     id: BigInt(2),
-    name: "Priya Nair",
-    role: "Vice President",
+    name: "Vinayak B Menon",
+    role: "Admin",
     accessLevel: BigInt(1),
-    joinYear: BigInt(2024),
+    joinYear: BigInt(2025),
   },
   {
     id: BigInt(3),
-    name: "Rahul Verma",
-    role: "Lead Developer",
+    name: "Niranjan M R",
+    role: "Dev Lead",
     accessLevel: BigInt(2),
-    joinYear: BigInt(2024),
+    joinYear: BigInt(2025),
   },
   {
     id: BigInt(4),
-    name: "Sneha Patel",
-    role: "UI/UX Designer",
+    name: "Member_004",
+    role: "Developer",
     accessLevel: BigInt(3),
-    joinYear: BigInt(2024),
+    joinYear: BigInt(2025),
   },
   {
     id: BigInt(5),
-    name: "Karan Mehta",
-    role: "Systems Engineer",
+    name: "Member_005",
+    role: "Developer",
     accessLevel: BigInt(3),
     joinYear: BigInt(2025),
   },
   {
     id: BigInt(6),
-    name: "Ananya Singh",
-    role: "Content Strategist",
+    name: "+ 47 more nodes",
+    role: "Active Members",
     accessLevel: BigInt(3),
     joinYear: BigInt(2025),
   },
@@ -82,7 +82,7 @@ export default function AboutSection() {
       </div>
 
       <div className="amber-text text-xs">
-        total {members.length} entries in /team
+        total 50+ nodes in /team (showing key processes)
       </div>
 
       {/* Process listing table */}
@@ -161,20 +161,20 @@ export default function AboutSection() {
           </div>
           <div className="text-xs space-y-1">
             <div>
-              <span className="phosphor-dim">total threads: </span>
-              <span className="phosphor-bright">{members.length}</span>
+              <span className="phosphor-dim">total nodes: </span>
+              <span className="phosphor-bright">50+</span>
             </div>
             <div>
               <span className="phosphor-dim">running: </span>
-              <span className="phosphor-bright">{members.length}</span>
+              <span className="phosphor-bright">50+</span>
             </div>
             <div>
-              <span className="phosphor-dim">sleeping: </span>
-              <span className="phosphor-dim">0</span>
+              <span className="phosphor-dim">school: </span>
+              <span className="phosphor-bright">BVB KDLR</span>
             </div>
             <div>
-              <span className="phosphor-dim">zombie: </span>
-              <span className="phosphor-dim">0</span>
+              <span className="phosphor-dim">founded: </span>
+              <span className="phosphor-bright">2025</span>
             </div>
           </div>
           <div className="amber-text text-xs mt-2">
@@ -231,22 +231,22 @@ export default function AboutSection() {
         <div className="phosphor-dim">cat /etc/itclub/mission.txt</div>
         <div className="phosphor-text leading-relaxed">
           {
-            "> ITCLUB is a student-driven technology club dedicated to innovation,"
+            "> ITCLUB @ BVB KDLR -- a student-driven technology club founded in 2025."
           }
           <br />
           {
-            "> collaboration, and pushing the boundaries of what students can build."
+            "> Led by Suchithra Teacher (ROOT), with a growing team of 50+ active members."
           }
           <br />
           {
-            "> Since our founding, we've shipped real projects and grown a talented"
+            "> In our first year, we ran two major tech fests, a robotics workshop,"
           }
           <br />
-          {"> team. Year 2 brings bigger ambitions and bolder execution."}
+          {"> and provided tech support for school events -- all as Year 1."}
           <br />
           {"> "}
           <br />
-          {'> "Code is poetry. Ship it." -- ITCLUB v2.0'}
+          {'> "Year 2. Bigger. Bolder. PRAGATI awaits." -- ITCLUB v2.0'}
         </div>
       </div>
     </div>

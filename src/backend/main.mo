@@ -9,6 +9,8 @@ import Runtime "mo:core/Runtime";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
+
+
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -43,17 +45,18 @@ actor {
     joinYear : Nat;
   };
 
-  // Wishlist System
+  // Persistent data structures
   let wishlists = Map.empty<Principal, Bool>();
   let members = Map.empty<Nat, Member>();
   let projects = Map.empty<Nat, Project>();
   let upcomingProjects = Map.empty<Nat, UpcomingProject>();
   let visitors = Set.empty<Principal>();
   let userProfiles = Map.empty<Principal, UserProfile>();
+  let wishlistAnon = Map.empty<Text, Bool>();
 
   // User Profile Management
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can access profiles");
     };
     userProfiles.get(caller);
@@ -67,15 +70,15 @@ actor {
   };
 
   public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can save profiles");
     };
     userProfiles.add(caller, profile);
   };
 
-  // Wishlist PRAGATI 2.0
+  // Persistent Wishlist (Principal-based)
   public shared ({ caller }) func addWishlist() : async Bool {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only authenticated users can add to wishlist");
     };
     switch (wishlists.get(caller)) {
@@ -89,22 +92,16 @@ actor {
   };
 
   public shared ({ caller }) func removeWishlist() : async Bool {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only authenticated users can remove from wishlist");
     };
     switch (wishlists.get(caller)) {
-      case (null) {
-        false;
-      };
+      case (null) { false };
       case (?_) {
         wishlists.remove(caller);
         true;
       };
     };
-  };
-
-  public query ({ caller }) func getWishlistCount() : async Nat {
-    wishlists.size();
   };
 
   public query ({ caller }) func isWishlisted() : async Bool {
@@ -114,19 +111,61 @@ actor {
     };
   };
 
+  // Anonymous Wishlist functions (Text-based)
+  public shared ({ caller }) func addWishlistAnon(token : Text) : async Bool {
+    if (token.size() == 0) {
+      return false;
+    };
+
+    switch (wishlistAnon.get(token)) {
+      case (null) {
+        wishlistAnon.add(token, true);
+        checkReveal();
+        true;
+      };
+      case (?_) { false };
+    };
+  };
+
+  public shared ({ caller }) func removeWishlistAnon(token : Text) : async Bool {
+    if (token.size() == 0) {
+      return false;
+    };
+
+    switch (wishlistAnon.get(token)) {
+      case (null) { false };
+      case (?_) {
+        wishlistAnon.remove(token);
+        true;
+      };
+    };
+  };
+
+  public query ({ caller }) func isWishlistedAnon(token : Text) : async Bool {
+    switch (wishlistAnon.get(token)) {
+      case (null) { false };
+      case (?_) { true };
+    };
+  };
+
+  public query ({ caller }) func getWishlistCount() : async Nat {
+    wishlistAnon.size() + wishlists.size();
+  };
+
   public query ({ caller }) func isProjectRevealed() : async Bool {
-    wishlists.size() >= 200;
+    (wishlistAnon.size() + wishlists.size()) >= 200;
   };
 
   func checkReveal() {
-    if (wishlists.size() >= 200) {
+    let totalCount = wishlistAnon.size() + wishlists.size();
+    if (totalCount >= 200) {
       // Project revealed logic (could trigger an event/notification)
     };
   };
 
   // Project Management
   public shared ({ caller }) func addProject(id : Nat, name : Text, description : Text, year : Nat, status : Text) : async () {
-    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can add projects");
     };
     let project : Project = {
@@ -148,7 +187,7 @@ actor {
   };
 
   public shared ({ caller }) func addUpcomingProject(id : Nat, name : Text, description : Text, expectedYear : Nat, progress : Nat) : async () {
-    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can add upcoming projects");
     };
     let upcoming : UpcomingProject = {
@@ -171,7 +210,7 @@ actor {
 
   // Team Members Management
   public shared ({ caller }) func addMember(id : Nat, name : Text, role : Text, accessLevel : Nat, joinYear : Nat) : async () {
-    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can add members");
     };
     let member : Member = {

@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useInternetIdentity } from "../../hooks/useInternetIdentity";
 import {
-  useAddWishlist,
+  useAddWishlistAnon,
+  useAnonToken,
   useGetWishlistCount,
   useIsProjectRevealed,
-  useIsWishlisted,
-  useRemoveWishlist,
+  useIsWishlistedAnon,
+  useRemoveWishlistAnon,
 } from "../../hooks/useQueries";
 
 const DECRYPT_THRESHOLD = 200;
@@ -241,16 +241,15 @@ function DecryptionReveal() {
 }
 
 export default function RestrictedSection() {
-  const { login, loginStatus, identity } = useInternetIdentity();
-  const isLoggedIn = !!identity;
+  const token = useAnonToken();
 
   const { data: wishlistCount = BigInt(0), isLoading: countLoading } =
     useGetWishlistCount();
-  const { data: isWishlisted = false } = useIsWishlisted();
+  const { data: isWishlisted = false } = useIsWishlistedAnon(token);
   const { data: isRevealed = false } = useIsProjectRevealed();
 
-  const addWishlist = useAddWishlist();
-  const removeWishlist = useRemoveWishlist();
+  const addWishlist = useAddWishlistAnon(token);
+  const removeWishlist = useRemoveWishlistAnon(token);
 
   const count = Number(wishlistCount);
   const progressPct = Math.min(100, (count / DECRYPT_THRESHOLD) * 100);
@@ -267,10 +266,6 @@ export default function RestrictedSection() {
   }, [isRevealed, prevRevealed]);
 
   const handleWishlist = useCallback(async () => {
-    if (!isLoggedIn) {
-      login();
-      return;
-    }
     try {
       if (isWishlisted) {
         await removeWishlist.mutateAsync();
@@ -282,7 +277,7 @@ export default function RestrictedSection() {
     } catch {
       toast.error("CONNECTION FAILED. Try again.");
     }
-  }, [isLoggedIn, login, isWishlisted, addWishlist, removeWishlist]);
+  }, [isWishlisted, addWishlist, removeWishlist]);
 
   const isMutating = addWishlist.isPending || removeWishlist.isPending;
 
@@ -422,33 +417,14 @@ export default function RestrictedSection() {
         </div>
       </div>
 
-      {/* Action area */}
+      {/* Action area — no login required, anonymous via browser token */}
       <div
         className="terminal-border p-6 space-y-4 text-center"
         style={{
           background: "oklch(0.08 0.02 142 / 0.3)",
         }}
       >
-        {!isLoggedIn ? (
-          <div className="space-y-3">
-            <div className="phosphor-text text-sm">
-              AUTHENTICATION REQUIRED TO CONTRIBUTE TO DECRYPTION
-            </div>
-            <div className="phosphor-dim text-xs">
-              Connect your identity to register as a decryption node
-            </div>
-            <button
-              type="button"
-              className="btn-terminal btn-amber text-sm px-6 py-2"
-              onClick={login}
-              disabled={loginStatus === "logging-in"}
-            >
-              {loginStatus === "logging-in"
-                ? "[ AUTHENTICATING... ]"
-                : "[ CONNECT IDENTITY ]"}
-            </button>
-          </div>
-        ) : isWishlisted ? (
+        {isWishlisted ? (
           <div className="space-y-3">
             <div
               className="font-bold text-sm tracking-wider"
@@ -463,7 +439,7 @@ export default function RestrictedSection() {
               Your node is connected. Awaiting {remaining} more peers.
             </div>
             <div className="phosphor-dim text-xs">
-              IDENTITY: {identity?.getPrincipal().toString().slice(0, 16)}...
+              NODE_ID: {token.slice(0, 8).toUpperCase()}...
             </div>
             <div className="phosphor-dim text-xs">AWAITING PEERS...</div>
             <div className="flex gap-3 justify-center flex-wrap">
@@ -477,6 +453,7 @@ export default function RestrictedSection() {
               </button>
               <button
                 type="button"
+                data-ocid="secret.wishlist.toggle"
                 className="btn-terminal text-xs px-4 py-1.5"
                 style={{
                   borderColor: "oklch(0.55 0.2 28)",
@@ -499,7 +476,7 @@ export default function RestrictedSection() {
               to unlock the secret. Be part of the decryption collective.
             </div>
             <div className="phosphor-dim text-xs">
-              IDENTITY: {identity?.getPrincipal().toString().slice(0, 16)}...
+              NODE_ID: {token.slice(0, 8).toUpperCase()}... [UNREGISTERED]
             </div>
             <button
               type="button"

@@ -124,6 +124,7 @@ export interface backendInterface {
     addProject(id: bigint, name: string, description: string, year: bigint, status: string): Promise<void>;
     addUpcomingProject(id: bigint, name: string, description: string, expectedYear: bigint, progress: bigint): Promise<void>;
     addWishlist(): Promise<boolean>;
+    addWishlistAnon(token: string): Promise<boolean>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     getAllMembers(): Promise<Array<Member>>;
     getAllProjects(): Promise<Array<Project>>;
@@ -141,7 +142,9 @@ export interface backendInterface {
     isCallerAdmin(): Promise<boolean>;
     isProjectRevealed(): Promise<boolean>;
     isWishlisted(): Promise<boolean>;
+    isWishlistedAnon(token: string): Promise<boolean>;
     removeWishlist(): Promise<boolean>;
+    removeWishlistAnon(token: string): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
 }
 import type { UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
@@ -214,6 +217,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.addWishlist();
+            return result;
+        }
+    }
+    async addWishlistAnon(arg0: string): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addWishlistAnon(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addWishlistAnon(arg0);
             return result;
         }
     }
@@ -416,6 +433,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async isWishlistedAnon(arg0: string): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.isWishlistedAnon(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.isWishlistedAnon(arg0);
+            return result;
+        }
+    }
     async removeWishlist(): Promise<boolean> {
         if (this.processError) {
             try {
@@ -427,6 +458,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.removeWishlist();
+            return result;
+        }
+    }
+    async removeWishlistAnon(arg0: string): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.removeWishlistAnon(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.removeWishlistAnon(arg0);
             return result;
         }
     }

@@ -2,27 +2,42 @@ import { useEffect, useRef, useState } from "react";
 import { useGetClubInfo } from "../../hooks/useQueries";
 
 const CHANGELOG = [
-  { ver: "v2.0", type: "NEW", text: "Enhanced project pipeline" },
-  { ver: "v2.0", type: "NEW", text: "Expanded team roster (6 members)" },
-  { ver: "v2.0", type: "NEW", text: "Secret project development initiated" },
+  { ver: "v2.0", type: "NEW", text: "PRAGATI 2.0 -- secret project initiated" },
+  { ver: "v2.0", type: "NEW", text: "50+ members and growing" },
+  { ver: "v2.0", type: "UPD", text: "Skills matrix upgraded for Year 2" },
   { ver: "v2.0", type: "FIX", text: "Motivation levels normalized (↑200%)" },
-  { ver: "v2.0", type: "UPD", text: "Skills matrix upgraded" },
-  { ver: "v1.0", type: "INIT", text: "Club system initialized" },
-  { ver: "v1.0", type: "ADD", text: "Core team assembled" },
-  { ver: "v1.0", type: "ADD", text: "First project shipped" },
+  {
+    ver: "v1.0",
+    type: "ADD",
+    text: "Suttradhara Mini Tech Fest -- Aug 01, 2025",
+  },
+  { ver: "v1.0", type: "ADD", text: "Robotics Workshop -- Dec 04-05, 2025" },
+  { ver: "v1.0", type: "ADD", text: "Pragati Techfest -- Dec 06, 2025" },
+  { ver: "v1.0", type: "ADD", text: "Annual Day Background Presentation" },
+  {
+    ver: "v1.0",
+    type: "ADD",
+    text: "Scoreboard: Cultural Fest, Sports Fest, Math Quiz",
+  },
+  {
+    ver: "v1.0",
+    type: "INIT",
+    text: "ITCLUB @ BVB KDLR -- system initialized (2025)",
+  },
 ];
 
 const MARQUEE_MESSAGES = [
   "[ kernel: itclub.exe launched ]",
-  "[ sys: year2.module loaded ]",
-  "[ net: team.sync() complete ]",
+  "[ sys: year2.module loaded -- BVB KDLR ]",
+  "[ net: team.sync() complete -- 50+ nodes ]",
   "[ itclub: 1.0 -> 2.0 upgrade successful ]",
-  "[ fs: projects/ 4 items ]",
+  "[ event: PRAGATI_TECHFEST dec-06 executed OK ]",
+  "[ event: SUTTRADHARA mini-tech-fest aug-01 OK ]",
+  "[ event: robotics_workshop dec-04 dec-05 OK ]",
   "[ kernel: innovation.ko inserted ]",
-  "[ itclub: hackathon.prep() in progress ]",
   "[ sys: coffee.levels: CRITICAL ]",
   "[ net: github.push() OK ]",
-  "[ itclub: PRAGATI.decrypt: PENDING ]",
+  "[ itclub: PRAGATI_2.0.decrypt: PENDING ]",
 ];
 
 function VersionAnimation() {
@@ -161,7 +176,8 @@ export default function HomeSection() {
             />
           </div>
           <div className="phosphor-dim text-xs">
-            FOUNDED: {clubInfo?.foundingYear?.toString() ?? "2024"} | VERSION:{" "}
+            SCHOOL: BVB KDLR | FOUNDED:{" "}
+            {clubInfo?.foundingYear?.toString() ?? "2025"} | VERSION:{" "}
             {clubInfo?.version ?? "2.0"} | STATUS: OPERATIONAL
           </div>
         </div>
@@ -190,8 +206,8 @@ export default function HomeSection() {
       {/* Stats row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { label: "MEMBERS", value: "06" },
-          { label: "PROJECTS", value: "04" },
+          { label: "MEMBERS", value: "50+" },
+          { label: "EVENTS", value: "06" },
           { label: "YEAR", value: "02" },
           { label: "STATUS", value: "ACTIVE" },
         ].map((stat) => (

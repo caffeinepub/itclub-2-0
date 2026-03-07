@@ -41,6 +41,7 @@ export interface backendInterface {
     addProject(id: bigint, name: string, description: string, year: bigint, status: string): Promise<void>;
     addUpcomingProject(id: bigint, name: string, description: string, expectedYear: bigint, progress: bigint): Promise<void>;
     addWishlist(): Promise<boolean>;
+    addWishlistAnon(token: string): Promise<boolean>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     getAllMembers(): Promise<Array<Member>>;
     getAllProjects(): Promise<Array<Project>>;
@@ -58,6 +59,8 @@ export interface backendInterface {
     isCallerAdmin(): Promise<boolean>;
     isProjectRevealed(): Promise<boolean>;
     isWishlisted(): Promise<boolean>;
+    isWishlistedAnon(token: string): Promise<boolean>;
     removeWishlist(): Promise<boolean>;
+    removeWishlistAnon(token: string): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
 }

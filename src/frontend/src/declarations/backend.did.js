@@ -54,6 +54,7 @@ export const idlService = IDL.Service({
       [],
     ),
   'addWishlist' : IDL.Func([], [IDL.Bool], []),
+  'addWishlistAnon' : IDL.Func([IDL.Text], [IDL.Bool], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'getAllMembers' : IDL.Func([], [IDL.Vec(Member)], ['query']),
   'getAllProjects' : IDL.Func([], [IDL.Vec(Project)], ['query']),
@@ -80,7 +81,9 @@ export const idlService = IDL.Service({
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isProjectRevealed' : IDL.Func([], [IDL.Bool], ['query']),
   'isWishlisted' : IDL.Func([], [IDL.Bool], ['query']),
+  'isWishlistedAnon' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
   'removeWishlist' : IDL.Func([], [IDL.Bool], []),
+  'removeWishlistAnon' : IDL.Func([IDL.Text], [IDL.Bool], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
 });
 
@@ -133,6 +136,7 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'addWishlist' : IDL.Func([], [IDL.Bool], []),
+    'addWishlistAnon' : IDL.Func([IDL.Text], [IDL.Bool], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'getAllMembers' : IDL.Func([], [IDL.Vec(Member)], ['query']),
     'getAllProjects' : IDL.Func([], [IDL.Vec(Project)], ['query']),
@@ -159,7 +163,9 @@ export const idlFactory = ({ IDL }) => {
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isProjectRevealed' : IDL.Func([], [IDL.Bool], ['query']),
     'isWishlisted' : IDL.Func([], [IDL.Bool], ['query']),
+    'isWishlistedAnon' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
     'removeWishlist' : IDL.Func([], [IDL.Bool], []),
+    'removeWishlistAnon' : IDL.Func([IDL.Text], [IDL.Bool], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   });
 };

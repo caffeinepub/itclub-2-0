@@ -50,6 +50,7 @@ export interface _SERVICE {
     undefined
   >,
   'addWishlist' : ActorMethod<[], boolean>,
+  'addWishlistAnon' : ActorMethod<[string], boolean>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'getAllMembers' : ActorMethod<[], Array<Member>>,
   'getAllProjects' : ActorMethod<[], Array<Project>>,
@@ -67,7 +68,9 @@ export interface _SERVICE {
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'isProjectRevealed' : ActorMethod<[], boolean>,
   'isWishlisted' : ActorMethod<[], boolean>,
+  'isWishlistedAnon' : ActorMethod<[string], boolean>,
   'removeWishlist' : ActorMethod<[], boolean>,
+  'removeWishlistAnon' : ActorMethod<[string], boolean>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;
