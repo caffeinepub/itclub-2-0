@@ -1,54 +1,47 @@
-# ITCLUB 2.0 - Retro Console Website
+# ITCLUB 2.0
 
 ## Current State
-New project. No existing code.
+- Full retro CRT terminal website with 5 sections: Home, About, Projects, Upcoming, Restricted
+- AboutSection shows team members (ROOT/ADMIN/DEV_LEAD/USER) in a process table
+- ProjectsSection shows completed projects as executed programs with static descriptions
+- RestrictedSection has PRAGATI 2.0 encrypted block with a 200-node wishlist decrypt mechanic
+- No admin authentication exists anywhere
+- App.tsx manages section routing via a `Section` type union
 
 ## Requested Changes (Diff)
 
 ### Add
-- Full retro console / terminal aesthetic website for a school IT Club's 2nd anniversary
-- Boot sequence animation on first load (simulating OS startup)
-- Directory-style navigation sidebar with: HOME, ABOUT US, PROJECTS, UPCOMING PROJECTS, RESTRICTED AREA
-- Scanline overlay, CRT flicker effects, monospace typography, green-on-black or amber-on-black color palette
-- Blinking cursor, typing animation effects throughout
-- **Home page**: ITCLUB 1.0 → 2.0 transition animation, club tagline, "version changelog" style display
-- **About Us page**: Team members listed as "system processes" or "registered users", roles shown as access levels
-- **Projects page**: Completed works displayed as "executed programs" with status codes
-- **Upcoming Projects page**: Future work shown as "scheduled tasks" or "queued processes" with progress bars
-- **Restricted Area / Secret Project page**:
-  - Simulated encryption lock UI with hex/binary scrambled text
-  - Wishlist button ("ADD TO DECRYPTION QUEUE") that increments a global counter stored in backend
-  - Progress bar showing X/200 supporters needed to decrypt
-  - When 200 wishlists reached, reveals "PRAGATI 2.0" project details with a dramatic "DECRYPTION COMPLETE" animation
-  - Each user can only wishlist once (tracked by session/principal)
-- ASCII art logo for ITCLUB
-- Fake system stats in footer: uptime, memory, active users, version
-- Random "system log" messages that scroll in the background or corner
-- Keyboard navigation hints (press keys to navigate)
+- `AdminAuthPage` component: retro terminal login screen with username/password fields
+  - Credentials: username `itbvbkdlr`, password `Itbvb@02`
+  - On success: store `adminAuthenticated = true` in React context + localStorage
+  - On failure: show retro "ACCESS DENIED" error with flashing red text
+  - Accessible only when clicking ROOT, ADMIN, or DEV_LEAD badge/row in AboutSection
+- `AdminContext` (React context): holds `isAdmin` boolean, `login(u, p)`, `logout()` functions
+- Admin edit mode in `ProjectsSection`:
+  - When `isAdmin` is true, each project's `name` and `description` fields become inline-editable (contenteditable or input fields)
+  - A save button per project (or auto-save on blur) persists edits to localStorage
+  - Visual indicator: green `[EDIT MODE ACTIVE]` badge in header when admin
+- Admin encrypt/decrypt toggle in `RestrictedSection`:
+  - When `isAdmin` is true, show a single `[ ENCRYPT / DECRYPT ]` toggle button
+  - Clicking it manually toggles the revealed state (overrides the 200-node threshold)
+  - The button shows current state: `[ FORCE DECRYPT ]` or `[ RE-ENCRYPT ]`
+  - This is purely frontend state — it does not call the backend wishlist counter
 
 ### Modify
-- N/A (new project)
+- `AboutSection`: make ROOT, ADMIN, DEV_LEAD access badges clickable (cursor-pointer, subtle glow on hover); clicking navigates to admin auth page
+- `App.tsx`: add `"admin-auth"` to the `Section` union type; pass `onNavigate` down so `AboutSection` can trigger navigation
+- `TerminalLayout.tsx`: render `AdminAuthPage` when `activeSection === "admin-auth"`
+- `RestrictedSection`: when `isAdmin`, show the force toggle button alongside the existing UI
+- `ProjectsSection`: when `isAdmin`, render edit controls on each project card
 
 ### Remove
-- N/A (new project)
+- Nothing removed
 
 ## Implementation Plan
-
-### Backend (Motoko)
-1. `addWishlist(userId: Text) -> async Result<Bool, Text>` - records a wishlist entry, prevents duplicates per principal
-2. `getWishlistCount() -> async Nat` - returns total wishlist count
-3. `isWishlisted(userId: Text) -> async Bool` - checks if current principal has wishlisted
-4. `isProjectRevealed() -> async Bool` - returns true if count >= 200
-5. Store wishlist entries as a Set of principal IDs in stable storage
-
-### Frontend
-1. Boot sequence loader (ASCII art, fake init messages)
-2. Retro terminal layout with directory sidebar navigation
-3. CRT scanline + flicker CSS effects
-4. Home: version transition (1.0 -> 2.0) with typing animation
-5. About Us: team members as system processes
-6. Projects: completed works as executed programs
-7. Upcoming: scheduled tasks queue view
-8. Restricted Area: encrypted UI, wishlist counter, reveal logic with backend integration
-9. Footer with fake system stats
-10. Ambient scrolling log messages
+1. Create `AdminContext.tsx` with `isAdmin` state, `login()`, `logout()`, persisted to localStorage
+2. Create `AdminAuthPage.tsx` — terminal-styled auth form, retro boot-style, with error state
+3. Modify `App.tsx` to wrap app in `AdminProvider`, add `"admin-auth"` to Section union
+4. Modify `TerminalLayout.tsx` to render `AdminAuthPage` and pass `onNavigate` to `AboutSection`
+5. Modify `AboutSection.tsx` to accept `onNavigate` prop and attach click handlers to ROOT/ADMIN/DEV_LEAD rows
+6. Modify `ProjectsSection.tsx` to consume `AdminContext`, render inline edit fields and save-to-localStorage when admin
+7. Modify `RestrictedSection.tsx` to consume `AdminContext`, show force encrypt/decrypt button when admin

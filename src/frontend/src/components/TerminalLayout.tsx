@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import type { Section } from "../App";
+import { useAdmin } from "../context/AdminContext";
 import { useGetVisitorCount } from "../hooks/useQueries";
+import AdminAuthPage from "./AdminAuthPage";
 import Sidebar from "./Sidebar";
 import SystemLog from "./SystemLog";
 import AboutSection from "./sections/AboutSection";
@@ -42,18 +44,27 @@ export default function TerminalLayout({
   const uptimeHours = Math.floor(uptime / 3600);
   const uptimeMinutes = Math.floor((uptime % 3600) / 60);
 
+  const { isAdmin } = useAdmin();
+
   const renderSection = () => {
     switch (activeSection) {
       case "home":
         return <HomeSection />;
       case "about":
-        return <AboutSection />;
+        return <AboutSection onNavigate={onNavigate} />;
       case "projects":
         return <ProjectsSection />;
       case "upcoming":
         return <UpcomingSection />;
       case "restricted":
         return <RestrictedSection />;
+      case "admin-auth":
+        return (
+          <AdminAuthPage
+            onSuccess={() => onNavigate("about")}
+            onCancel={() => onNavigate("about")}
+          />
+        );
       default:
         return <HomeSection />;
     }
@@ -185,6 +196,20 @@ export default function TerminalLayout({
           <span className="phosphor-dim">
             VISITORS: {visitorCount?.toString() ?? "..."}
           </span>
+          {isAdmin && (
+            <span
+              className="text-xs font-bold px-2 py-0.5 border hidden sm:block"
+              style={{
+                color: "oklch(0.76 0.16 75)",
+                borderColor: "oklch(0.55 0.14 75)",
+                background: "oklch(0.12 0.04 75 / 0.4)",
+                textShadow: "0 0 8px oklch(0.76 0.16 75 / 0.8)",
+                boxShadow: "0 0 8px oklch(0.55 0.14 75 / 0.3)",
+              }}
+            >
+              ★ ADMIN
+            </span>
+          )}
           <span className="amber-text hidden sm:block">ITCLUB_OS v2.0</span>
           <span className="cursor-blink" />
         </div>

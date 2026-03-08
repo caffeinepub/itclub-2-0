@@ -1,4 +1,6 @@
+import type { Section } from "../../App";
 import type { Member } from "../../backend.d";
+import { useAdmin } from "../../context/AdminContext";
 import { useGetAllMembers } from "../../hooks/useQueries";
 
 const SAMPLE_MEMBERS: Member[] = [
@@ -66,7 +68,12 @@ function progressBar(length = 6): string {
   return "█".repeat(length);
 }
 
-export default function AboutSection() {
+interface AboutSectionProps {
+  onNavigate: (section: Section) => void;
+}
+
+export default function AboutSection({ onNavigate }: AboutSectionProps) {
+  const { isAdmin, logout } = useAdmin();
   const { data: backendMembers, isLoading } = useGetAllMembers();
   const members =
     backendMembers && backendMembers.length > 0
@@ -126,17 +133,60 @@ export default function AboutSection() {
                         {m.role}
                       </td>
                       <td>
-                        <span
-                          className="font-bold text-xs px-1"
-                          style={{
-                            color: access.color,
-                            textShadow: `0 0 6px ${access.color}`,
-                            border: `1px solid ${access.color}`,
-                            background: `${access.color}18`,
-                          }}
-                        >
-                          {access.label}
-                        </span>
+                        {Number(m.accessLevel) <= 2 ? (
+                          <button
+                            type="button"
+                            data-ocid={`about.admin.link.${i + 1}`}
+                            title="Click to access admin panel"
+                            onClick={() => onNavigate("admin-auth")}
+                            className="font-bold text-xs px-1 cursor-pointer"
+                            style={{
+                              color: access.color,
+                              textShadow: `0 0 6px ${access.color}`,
+                              border: `1px solid ${access.color}`,
+                              background: `${access.color}18`,
+                              fontFamily: "inherit",
+                              transition: "all 0.15s ease",
+                              boxShadow: `0 0 6px ${access.color}30`,
+                            }}
+                            onMouseEnter={(e) => {
+                              (
+                                e.currentTarget as HTMLButtonElement
+                              ).style.background = `${access.color}35`;
+                              (
+                                e.currentTarget as HTMLButtonElement
+                              ).style.boxShadow = `0 0 12px ${access.color}70`;
+                              (
+                                e.currentTarget as HTMLButtonElement
+                              ).style.textShadow = `0 0 10px ${access.color}`;
+                            }}
+                            onMouseLeave={(e) => {
+                              (
+                                e.currentTarget as HTMLButtonElement
+                              ).style.background = `${access.color}18`;
+                              (
+                                e.currentTarget as HTMLButtonElement
+                              ).style.boxShadow = `0 0 6px ${access.color}30`;
+                              (
+                                e.currentTarget as HTMLButtonElement
+                              ).style.textShadow = `0 0 6px ${access.color}`;
+                            }}
+                          >
+                            {access.label} ▸
+                          </button>
+                        ) : (
+                          <span
+                            className="font-bold text-xs px-1"
+                            style={{
+                              color: access.color,
+                              textShadow: `0 0 6px ${access.color}`,
+                              border: `1px solid ${access.color}`,
+                              background: `${access.color}18`,
+                            }}
+                          >
+                            {access.label}
+                          </span>
+                        )}
                       </td>
                       <td className="phosphor-dim hidden md:table-cell">
                         {m.joinYear.toString()}
@@ -219,6 +269,40 @@ export default function AboutSection() {
           </div>
         </div>
       </div>
+
+      {/* Admin session indicator */}
+      {isAdmin && (
+        <div
+          className="flex items-center justify-between border px-4 py-2 text-xs"
+          style={{
+            borderColor: "oklch(0.55 0.14 75)",
+            background: "oklch(0.1 0.04 75 / 0.2)",
+            boxShadow: "0 0 12px oklch(0.55 0.14 75 / 0.2)",
+          }}
+        >
+          <span
+            className="font-bold tracking-wider"
+            style={{
+              color: "oklch(0.76 0.16 75)",
+              textShadow: "0 0 6px oklch(0.76 0.16 75 / 0.7)",
+            }}
+          >
+            ★ ADMIN SESSION ACTIVE -- ELEVATED PRIVILEGES GRANTED
+          </span>
+          <button
+            type="button"
+            className="btn-terminal text-xs px-3 py-1"
+            style={{
+              borderColor: "oklch(0.5 0.15 28)",
+              color: "oklch(0.65 0.2 28)",
+              fontSize: "10px",
+            }}
+            onClick={logout}
+          >
+            [ LOGOUT ]
+          </button>
+        </div>
+      )}
 
       {/* Mission statement */}
       <div

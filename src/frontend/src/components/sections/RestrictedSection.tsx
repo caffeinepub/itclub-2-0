@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useAdmin } from "../../context/AdminContext";
 import {
   useAddWishlistAnon,
   useAnonToken,
@@ -241,6 +242,7 @@ function DecryptionReveal() {
 }
 
 export default function RestrictedSection() {
+  const { isAdmin } = useAdmin();
   const token = useAnonToken();
 
   const { data: wishlistCount = BigInt(0), isLoading: countLoading } =
@@ -257,6 +259,7 @@ export default function RestrictedSection() {
 
   const [showRevealAnimation, setShowRevealAnimation] = useState(false);
   const [prevRevealed, setPrevRevealed] = useState(false);
+  const [adminForceRevealed, setAdminForceRevealed] = useState(false);
 
   useEffect(() => {
     if (isRevealed && !prevRevealed) {
@@ -281,9 +284,30 @@ export default function RestrictedSection() {
 
   const isMutating = addWishlist.isPending || removeWishlist.isPending;
 
-  if (isRevealed || showRevealAnimation) {
+  const effectivelyRevealed =
+    isRevealed || showRevealAnimation || adminForceRevealed;
+
+  if (effectivelyRevealed) {
     return (
-      <div data-ocid="restricted.section" className="max-w-4xl">
+      <div data-ocid="restricted.section" className="max-w-4xl space-y-4">
+        {isAdmin && (
+          <div className="flex justify-end">
+            <button
+              type="button"
+              data-ocid="admin.secret.toggle.button"
+              className="btn-terminal text-xs px-4 py-2 font-bold tracking-wider"
+              onClick={() => setAdminForceRevealed(false)}
+              style={{
+                borderColor: "oklch(0.55 0.2 28)",
+                color: "oklch(0.7 0.22 28)",
+                textShadow: "0 0 6px oklch(0.7 0.22 28 / 0.7)",
+                boxShadow: "0 0 10px oklch(0.55 0.2 28 / 0.3)",
+              }}
+            >
+              [ RE-ENCRYPT ]
+            </button>
+          </div>
+        )}
         <DecryptionReveal />
       </div>
     );
@@ -416,6 +440,41 @@ export default function RestrictedSection() {
           ] {count}/{DECRYPT_THRESHOLD}
         </div>
       </div>
+
+      {/* Admin force decrypt button */}
+      {isAdmin && (
+        <div
+          className="terminal-border p-4 flex items-center justify-between"
+          style={{
+            background: "oklch(0.09 0.04 75 / 0.2)",
+            borderColor: "oklch(0.5 0.14 75)",
+            boxShadow: "0 0 15px oklch(0.5 0.14 75 / 0.2)",
+          }}
+        >
+          <div className="text-xs space-y-1">
+            <div
+              className="font-bold tracking-wider"
+              style={{
+                color: "oklch(0.76 0.16 75)",
+                textShadow: "0 0 6px oklch(0.76 0.16 75 / 0.7)",
+              }}
+            >
+              ★ ADMIN OVERRIDE AVAILABLE
+            </div>
+            <div className="phosphor-dim">
+              Force-decrypt without reaching the 200-node threshold.
+            </div>
+          </div>
+          <button
+            type="button"
+            data-ocid="admin.secret.toggle.button"
+            className="btn-terminal btn-amber text-xs px-5 py-2 font-bold tracking-wider"
+            onClick={() => setAdminForceRevealed(true)}
+          >
+            [ FORCE DECRYPT ]
+          </button>
+        </div>
+      )}
 
       {/* Action area — no login required, anonymous via browser token */}
       <div
